@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"strings"
 
-	ftpserver "github.com/fclairamb/ftpserverlib"
 	"github.com/adfnekc/s32ftp/internal/s3fs"
+	ftpserver "github.com/fclairamb/ftpserverlib"
 )
 
 // Client implements ftpserver.ClientDriver plus the optional extensions the

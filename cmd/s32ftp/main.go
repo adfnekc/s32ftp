@@ -10,6 +10,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 	"time"
 
@@ -23,6 +24,25 @@ import (
 
 // version is overridable at build time with -ldflags "-X main.version=...".
 var version = "dev"
+
+// resolvedVersion returns the ldflags version when set, otherwise the version
+// recorded by the Go toolchain (so `go install ...@vX.Y.Z` reports the tag).
+func resolvedVersion() string {
+	if version != "dev" {
+		return version
+	}
+
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return version
+	}
+
+	if v := info.Main.Version; v != "" && v != "(devel)" {
+		return v
+	}
+
+	return version
+}
 
 func main() {
 	if err := run(); err != nil {
@@ -44,7 +64,7 @@ func run() error {
 	flag.Parse()
 
 	if showVersion {
-		fmt.Println("s32ftp", version)
+		fmt.Println("s32ftp", resolvedVersion())
 
 		return nil
 	}
@@ -111,7 +131,7 @@ func run() error {
 	}
 
 	logger.Info("s32ftp started",
-		"version", version,
+		"version", resolvedVersion(),
 		"listen", server.Addr(),
 		"tls_mode", cfg.FTP.TLS.Mode,
 		"bucket", cfg.S3.Bucket,

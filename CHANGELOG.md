@@ -5,7 +5,16 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] - 2026-09-21
+## [0.1.1] - 2026-09-23
+
+### Fixed
+
+- `s32ftp -version` now reports the module version when installed with
+  `go install ...@vX.Y.Z` (previously it printed `dev` because `go install`
+  does not apply the release ldflags). Explicit `-ldflags` builds are
+  unaffected.
+
+## [0.1.0] - 2026-09-23
 
 Initial release.
 

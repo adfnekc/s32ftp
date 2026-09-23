@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"sync"
 
-	ftpserver "github.com/fclairamb/ftpserverlib"
 	"github.com/adfnekc/s32ftp/internal/config"
 	"github.com/adfnekc/s32ftp/internal/s3fs"
+	ftpserver "github.com/fclairamb/ftpserverlib"
 )
 
 // ErrTooManyClients is returned when the configured client limit is reached.
