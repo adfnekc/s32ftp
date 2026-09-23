@@ -1,0 +1,13 @@
+bin/
+dist/
+*.log
+*.out
+coverage.*
+*.pem
+*.key
+.env
+config.yaml
+
+.idea/
+.vscode/
+.DS_Store

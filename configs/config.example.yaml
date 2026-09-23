@@ -1,0 +1,86 @@
+# s32ftp example configuration
+#
+# Every value shown here is a default unless stated otherwise. Environment
+# variables prefixed with S32FTP_ (see README) override the file.
+
+ftp:
+  # Interface to bind the FTP control socket to.
+  listen_ip: "0.0.0.0"
+  # Control port. Use 990 together with tls.mode: implicit.
+  port: 2121
+  # Greeting sent right after a client connects.
+  banner: "s32ftp FTP-to-S3 gateway ready"
+  # Drop idle control connections after this many seconds.
+  idle_timeout_seconds: 900
+  # Timeout for establishing active/passive data connections.
+  connection_timeout_seconds: 30
+  # Public IP advertised in PASV/EPSV replies (needed behind NAT or Docker).
+  public_host: ""
+  # Passive data port range. Leave empty to let the OS pick random ports.
+  # Must be published through NAT/firewall when set.
+  passive_port_range: "50000-50100"
+  # Reject PORT/EPRT (active mode) entirely. Useful for hardened deployments.
+  disable_active_mode: false
+  # Allow data connections from an IP different from the control connection.
+  # Only enable when clients are behind a load balancer or NAT.
+  disable_ip_match: false
+  # Maximum concurrent FTP clients. 0 means unlimited.
+  max_clients: 0
+
+  tls:
+    # off       - plaintext only
+    # explicit  - AUTH TLS available, plaintext still allowed
+    # required  - AUTH TLS available, plaintext logins rejected
+    # implicit  - TLS from the first byte (use port 990)
+    mode: "off"
+    cert_file: ""
+    key_file: ""
+    min_version: "1.2"
+
+  users:
+    - username: "admin"
+      # Use password or password_hash (bcrypt). Generate a hash with:
+      #   s32ftp -hash-password 'my secret'
+      password: "admin123"
+      password_hash: ""
+      # Deny every mutating FTP command (STOR, APPE, DELE, RNFR, MKD, RMD).
+      read_only: false
+      # Optional per-user overrides; empty means "use the global s3 value".
+      bucket: ""
+      root_prefix: ""
+
+s3:
+  # Endpoint of the S3 compatible service. Leave empty for AWS S3 itself.
+  endpoint_url: "http://127.0.0.1:9000"
+  region: "us-east-1"
+  # Static credentials. Leave both empty to use the AWS default credential
+  # chain (environment, shared config, IMDS/IRSA).
+  access_key_id: ""
+  secret_access_key: ""
+  session_token: ""
+  bucket: "ftp"
+  # All objects are stored under this prefix inside the bucket.
+  root_prefix: ""
+  # Required by MinIO, Ceph RGW and most other S3 compatible servers.
+  force_path_style: true
+  # Skip TLS verification for self-signed endpoints (prefer ca_bundle).
+  insecure_skip_verify: false
+  # PEM file with additional CA certificates.
+  ca_bundle: ""
+  # Multipart part size in MiB, minimum 5.
+  part_size_mb: 8
+  # Parallel part uploads per transfer.
+  upload_concurrency: 4
+  # Create the bucket at startup when it does not exist yet.
+  create_bucket_if_missing: false
+  # Write a zero-byte "<dir>/" marker object on MKD so empty directories
+  # survive. S3 has no real directories, so this is how they are emulated.
+  dir_marker: true
+
+logging:
+  # debug | info | warn | error
+  level: "info"
+  # text | json
+  format: "text"
+  # stdout | stderr | /path/to/file.log
+  output: "stdout"

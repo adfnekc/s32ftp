@@ -1,0 +1,53 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report! Please redact credentials, endpoints and bucket
+        names if they are sensitive.
+  - type: input
+    id: version
+    attributes:
+      label: s32ftp version
+      description: Output of `s32ftp -version`, or the release tag / image tag.
+      placeholder: v0.1.0
+    validations:
+      required: true
+  - type: input
+    id: go
+    attributes:
+      label: Go version / platform
+      placeholder: go1.26.0 linux/amd64
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration
+      description: The configuration you used, with secrets redacted.
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include the FTP client and the exact commands you ran.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour and logs
+      description: Set `logging.level: debug` for the most useful output.
+      render: shell
+    validations:
+      required: true

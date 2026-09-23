@@ -1,0 +1,12 @@
+.git
+.github
+bin
+dist
+*.log
+*.pem
+*.key
+.env
+config.yaml
+Dockerfile
+docker-compose.yaml
+Makefile
